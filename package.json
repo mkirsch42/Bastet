@@ -1,0 +1,26 @@
+{
+  "name": "bastet",
+  "version": "0.1.0",
+  "description": "A web-based RPG sound manager",
+  "homepage": ".",
+  "license": "GPL-3.0",
+  "private": true,
+  "author": "Mathew Kirschbaum <mkirsch42@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mkirsch42/bastet.git"
+  },
+  "dependencies": {
+    "react": "^15.4.2",
+    "react-dom": "^15.4.2"
+  },
+  "devDependencies": {
+    "react-scripts": "0.9.5"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
