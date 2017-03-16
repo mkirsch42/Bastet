@@ -1,7 +1,8 @@
 import { Howl } from 'howler';
 
 class SoundEffect {
-    constructor(howl) {
+    constructor(name, howl) {
+        this.name = name;
         Object.assign(howl, {
             autoplay: false,
             volume: 0,
@@ -10,9 +11,9 @@ class SoundEffect {
         this.howl = new Howl(howl);
     }
     static fromJSON(json) {
-        return new SoundEffect({
-            src: `${process.env.PUBLIC_URL}/sounds/${json}`
-        });
+        return new SoundEffect(json.name, Object.assign({
+            src: `${process.env.PUBLIC_URL}/sounds/${json.src}`
+        }, json.options));
     }
     fade(to, ms) {
         if(to > 0 && !this.howl.playing()) {
