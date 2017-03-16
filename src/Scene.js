@@ -4,11 +4,31 @@ class SoundEffect {
     constructor(howl) {
         this.howl = howl;
     }
+    static fromJSON(json) {
+        return new SoundEffect(new Howl({
+            src: `${process.env.PUBLIC_URL}/sounds/${json}`,
+            autoplay: false,
+            onfade: function() {
+                if(this.volume() === 0) {
+                    this.stop();
+                }
+            }
+        }));
+    }
+    fade(to, ms) {
+        if(to > 0 && !this.howl.playing()) {
+            this.howl.play();
+            this.howl.seek(0);
+            console.log('restarting');
+        }
+        this.howl.fade(this.howl.volume(), to, ms);
+
+    }
     play() {
-        this.howl.play();
+        this.fade(1, 2000);
     }
     stop() {
-        this.howl.stop();
+        this.fade(0, 2000);
     }
 }
 
@@ -17,13 +37,11 @@ class SoundSet {
         this.sounds = sounds;
     }
     static fromJSON(json) {
-        console.log(json);
-
-        return new SoundSet(json.map(me => new SoundEffect(new Howl({src: `${process.env.PUBLIC_URL}/sounds/${me}`, autoplay: false}))));
+        return new SoundSet(json.map(me => SoundEffect.fromJSON(me)));
     }
-    playAll() {
-        this.sounds.forEach((val, index, arr) => {
-            val.play();
+    apply(situation) {
+        situation.vals.forEach((val, ind)=> {
+            this.sounds[ind].fade(val, 2000);
         });
     }
     stopAll() {
@@ -49,11 +67,10 @@ class Scene {
         this.situations = situations;
     }
     static fromJSON(json) {
-        console.log(json);
         return new Scene(json.name, SoundSet.fromJSON(json.soundset), json.situations.map(me => Situation.fromJSON(me)));
     }
     play() {
-        this.soundset.playAll();
+        this.soundset.apply(this.situations[0]);
     }
     stop() {
         this.soundset.stopAll();
