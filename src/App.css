@@ -1,24 +1,44 @@
 .App {
-  text-align: center;
+  display: flex;
+  flex-direction: row;
+  height: 100vh
 }
 
-.App-logo {
-  animation: App-logo-spin infinite 20s linear;
-  height: 80px;
+.Sidebar {
+  display: flex;
+  flex-direction: column;
+  background: #90A4AE;
+  z-index: 10;
+  overflow-y: hidden;
+  max-width: 15%
 }
 
-.App-header {
-  background-color: #222;
-  height: 150px;
-  padding: 20px;
-  color: white;
+.Logo {
+  width: 100%;
+  height: auto;
+  padding: 0.5em;
+  flex-grow: 0;
 }
 
-.App-intro {
-  font-size: large;
+.SceneListScroller {
+  flex-grow: 1;
+  overflow-y: auto;
+  height: 100%;
 }
 
-@keyframes App-logo-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+.SceneList {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  flex-grow: 1;
+  padding: 1em;
+  align-items: center;
+  overflow-y: auto;
+  min-height: 100%;
+}
+
+.SceneView {
+  flex-grow: 1;
+  background: #CFD8DC;
+  padding: 2em;
 }
