@@ -1,29 +1,24 @@
 import React, { Component } from 'react';
-import { Howl } from 'howler';
+import axios from 'axios';
 import logo from './logo.svg';
 import './App.css';
 import SceneButton from './SceneButton.js'
 import SceneView from './SceneView.js'
-import Scene, { SoundSet, Situation, SoundEffect } from './Scene.js'
+import Scene from './Scene.js'
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      scenes: [
-        new Scene( "TEST",
-          new SoundSet(
-            [new SoundEffect(new Howl({
-              src: process.env.PUBLIC_URL + '/sounds/Galway.mp3'
-            }))]
-          ),
-          [
-            new Situation([1])
-          ]
-        )
-      ],
+      scenes: [],
       currentScene: null
-    }
+    };
+    axios.get(`${process.env.PUBLIC_URL}/scenes.json`).then(this.setupScenes.bind(this)).catch(()=>{
+
+    }).then(()=>console.log(this.state));
+  }
+  setupScenes(json) {
+    this.setState({ scenes: json.data.scenes.map((j) => Scene.fromJSON(j))});
   }
   render() {
     return (
@@ -33,19 +28,6 @@ class App extends Component {
           <div className="SceneListScroller">
             <div className="SceneList">
               {this.state.scenes.map((val, ind)=> <SceneButton key={ind} name={val.name} handler={()=>this.toggleScene(val)} /> )}
-              {this.state.scenes.map((val, ind) => <SceneButton key={ind} name={val.name} handler={() => this.toggleScene(val)} />)}
-              {this.state.scenes.map((val, ind) => <SceneButton key={ind} name={val.name} handler={() => this.toggleScene(val)} />)}
-              {this.state.scenes.map((val, ind) => <SceneButton key={ind} name={val.name} handler={() => this.toggleScene(val)} />)}
-              {this.state.scenes.map((val, ind) => <SceneButton key={ind} name={val.name} handler={() => this.toggleScene(val)} />)}
-              {this.state.scenes.map((val, ind) => <SceneButton key={ind} name={val.name} handler={() => this.toggleScene(val)} />)}
-              {this.state.scenes.map((val, ind) => <SceneButton key={ind} name={val.name} handler={() => this.toggleScene(val)} />)}
-              {this.state.scenes.map((val, ind) => <SceneButton key={ind} name={val.name} handler={() => this.toggleScene(val)} />)}
-              {this.state.scenes.map((val, ind) => <SceneButton key={ind} name={val.name} handler={() => this.toggleScene(val)} />)}
-              {this.state.scenes.map((val, ind) => <SceneButton key={ind} name={val.name} handler={() => this.toggleScene(val)} />)}
-              {this.state.scenes.map((val, ind) => <SceneButton key={ind} name={val.name} handler={() => this.toggleScene(val)} />)}
-              {this.state.scenes.map((val, ind) => <SceneButton key={ind} name={val.name} handler={() => this.toggleScene(val)} />)}
-              {this.state.scenes.map((val, ind) => <SceneButton key={ind} name={val.name} handler={() => this.toggleScene(val)} />)}
-              {this.state.scenes.map((val, ind) => <SceneButton key={ind} name={val.name} handler={() => this.toggleScene(val)} />)}
             </div>
           </div>
         </div>
