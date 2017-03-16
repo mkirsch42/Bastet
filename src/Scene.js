@@ -1,14 +1,15 @@
 import { Howl } from 'howler';
 
 class SoundEffect {
-    constructor(name, howl) {
+    constructor(name, options) {
         this.name = name;
-        Object.assign(howl, {
+        this.fades = options.fade;
+        Object.assign(options, {
             autoplay: false,
             volume: 0,
             onfade: ()=>{if(this.howl.volume() === 0) this.howl.stop();}
         });
-        this.howl = new Howl(howl);
+        this.howl = new Howl(options);
     }
     static fromJSON(json) {
         return new SoundEffect(json.name, Object.assign({
@@ -19,6 +20,9 @@ class SoundEffect {
         if(to > 0 && !this.howl.playing()) {
             this.howl.play();
             this.howl.seek(0);
+        }
+        if(!this.fades){
+            ms = 0;
         }
         this.howl.fade(this.howl.volume(), to, ms);
     }
