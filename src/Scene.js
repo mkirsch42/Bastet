@@ -2,28 +2,24 @@ import { Howl } from 'howler';
 
 class SoundEffect {
     constructor(howl) {
-        this.howl = howl;
+        Object.assign(howl, {
+            autoplay: false,
+            volume: 0,
+            onfade: ()=>{if(this.howl.volume() === 0) this.howl.stop();}
+        });
+        this.howl = new Howl(howl);
     }
     static fromJSON(json) {
-        return new SoundEffect(new Howl({
-            src: `${process.env.PUBLIC_URL}/sounds/${json}`,
-            autoplay: false,
-            html5: true,
-            onfade: function() {
-                if(this.volume() === 0) {
-                    this.stop();
-                }
-            }
-        }));
+        return new SoundEffect({
+            src: `${process.env.PUBLIC_URL}/sounds/${json}`
+        });
     }
     fade(to, ms) {
         if(to > 0 && !this.howl.playing()) {
             this.howl.play();
             this.howl.seek(0);
-            console.log('restarting');
         }
         this.howl.fade(this.howl.volume(), to, ms);
-
     }
     play() {
         this.fade(1, 2000);

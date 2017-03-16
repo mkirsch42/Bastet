@@ -15,7 +15,7 @@ class App extends Component {
     };
     axios.get(`${process.env.PUBLIC_URL}/scenes.json`).then(this.setupScenes.bind(this)).catch(()=>{
 
-    }).then(()=>console.log(this.state));
+    });
   }
   setupScenes(json) {
     this.setState({ scenes: json.data.scenes.map((j) => Scene.fromJSON(j))});
