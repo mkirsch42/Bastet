@@ -8,6 +8,7 @@ class SoundEffect {
         return new SoundEffect(new Howl({
             src: `${process.env.PUBLIC_URL}/sounds/${json}`,
             autoplay: false,
+            html5: true,
             onfade: function() {
                 if(this.volume() === 0) {
                     this.stop();
