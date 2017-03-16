@@ -11,6 +11,7 @@
     "url": "https://github.com/mkirsch42/bastet.git"
   },
   "dependencies": {
+    "howler": "^2.0.3",
     "react": "^15.4.2",
     "react-dom": "^15.4.2"
   },
