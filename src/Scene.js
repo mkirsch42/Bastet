@@ -20,12 +20,18 @@ class SoundEffect {
     static fromJSON(json) {
         return new SoundEffect(json.name, json.src.map(val => `${process.env.PUBLIC_URL}/sounds/${val}`), json.options);
     }
+    getRandomHowl() {
+        let notMe = this.howl;
+        do {
+            this.howl = this.howls[Math.floor(Math.random() * this.howls.length)];
+        } while (this.howls.length > 1 && this.howl === notMe);
+    }
     nextSound() {
-        this.howl = this.howls[Math.floor(Math.random() * this.howls.length)];
         this.fade(this.volume, fadeTime);
     }
     fade(to, ms) {
         if(to > 0 && !this.howl.playing()) {
+            this.getRandomHowl();
             this.howl.play();
             this.howl.seek(0);
         }
