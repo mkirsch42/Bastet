@@ -86,15 +86,17 @@ class Scene {
         this.name = name;
         this.soundset = soundset;
         this.situations = situations;
+        this.currentSituation = situations[0];
     }
     static fromJSON(json) {
         return new Scene(json.name, SoundSet.fromJSON(json.soundset), json.situations.map(me => Situation.fromJSON(me)));
     }
     apply(situation) {
+        this.currentSituation = situation;
         this.soundset.apply(situation);
     }
     play() {
-        this.soundset.apply(this.situations[0]);
+        this.soundset.apply(this.currentSituation);
     }
     stop() {
         this.soundset.stopAll();
