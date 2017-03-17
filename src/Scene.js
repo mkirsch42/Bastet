@@ -1,20 +1,28 @@
 import { Howl } from 'howler';
 
+var fadeTime = 1000;
+
 class SoundEffect {
-    constructor(name, options) {
+    constructor(name, sources, options) {
         this.name = name;
         this.fades = options.fade;
+        this.gap = 0;
+        this.volume = 0;
         Object.assign(options, {
             autoplay: false,
             volume: 0,
-            onfade: ()=>{if(this.howl.volume() === 0) this.howl.stop();}
+            onfade: ()=>{if(this.volume === 0) this.howl.stop();},
+            onend: ()=>{setTimeout(this.nextSound.bind(this), this.gap);}
         });
-        this.howl = new Howl(options);
+        this.howls = sources.map(src => new Howl(Object.assign(options, {src: src})));
+        this.howl = this.howls[Math.floor(Math.random() * this.howls.length)];
     }
     static fromJSON(json) {
-        return new SoundEffect(json.name, Object.assign({
-            src: `${process.env.PUBLIC_URL}/sounds/${json.src}`
-        }, json.options));
+        return new SoundEffect(json.name, json.src.map(val => `${process.env.PUBLIC_URL}/sounds/${val}`), json.options);
+    }
+    nextSound() {
+        this.howl = this.howls[Math.floor(Math.random() * this.howls.length)];
+        this.fade(this.volume, fadeTime);
     }
     fade(to, ms) {
         if(to > 0 && !this.howl.playing()) {
@@ -24,13 +32,14 @@ class SoundEffect {
         if(!this.fades){
             ms = 0;
         }
+        this.volume = to;
         this.howl.fade(this.howl.volume(), to, ms);
     }
     play() {
-        this.fade(1, 2000);
+        this.fade(1, fadeTime);
     }
     stop() {
-        this.fade(0, 2000);
+        this.fade(0, fadeTime);
     }
 }
 
@@ -43,7 +52,8 @@ class SoundSet {
     }
     apply(situation) {
         situation.vals.forEach((val, ind)=> {
-            this.sounds[ind].fade(val, 2000);
+            this.sounds[ind].fade(val, fadeTime);
+            this.sounds[ind].gap = situation.gaps[ind];
         });
     }
     stopAll() {
@@ -54,11 +64,12 @@ class SoundSet {
 }
 
 class Situation {
-    constructor(vals) {
+    constructor(vals, gaps) {
         this.vals = vals;
+        this.gaps = gaps;
     }
     static fromJSON(json) {
-        return new Situation(json.vals);
+        return new Situation(json.vals, json.gaps);
     }
 }
 
