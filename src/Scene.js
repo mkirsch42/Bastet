@@ -58,8 +58,9 @@ class SoundSet {
     }
     apply(situation) {
         situation.vals.forEach((val, ind)=> {
-            this.sounds[ind].fade(val, fadeTime);
-            this.sounds[ind].gap = situation.gaps[ind];
+            let gap = situation.gaps[ind];
+            setTimeout(()=>{this.sounds[ind].fade(val, fadeTime)}, gap);
+            this.sounds[ind].gap = gap;
         });
     }
     stopAll() {
