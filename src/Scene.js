@@ -1,6 +1,6 @@
 import { Howl } from 'howler';
 
-var fadeTime = 1000;
+var fadeTime = 2500;
 
 class SoundEffect {
     constructor(name, sources, options) {
@@ -71,12 +71,13 @@ class SoundSet {
 }
 
 class Situation {
-    constructor(vals, gaps) {
+    constructor(name, vals, gaps) {
+        this.name = name;
         this.vals = vals;
         this.gaps = gaps;
     }
     static fromJSON(json) {
-        return new Situation(json.vals, json.gaps);
+        return new Situation(json.name, json.vals, json.gaps);
     }
 }
 
@@ -88,6 +89,9 @@ class Scene {
     }
     static fromJSON(json) {
         return new Scene(json.name, SoundSet.fromJSON(json.soundset), json.situations.map(me => Situation.fromJSON(me)));
+    }
+    apply(situation) {
+        this.soundset.apply(situation);
     }
     play() {
         this.soundset.apply(this.situations[0]);
